@@ -6,12 +6,11 @@ import errno
 root = Tk()
 root.title("Messager")
 root.resizable(0,0)
-username = "Tommy"
+USERNAME = ""
 
 HEADER_LENGTH = 10
-IP = "10.50.125.73"
+IP = "127.0.0.1"
 PORT = 1234
-
 # Create a socket
 # socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX
 # socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams, socket.SOCK_RAW - raw IP packets
@@ -21,11 +20,45 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((IP, PORT))
 
 client_socket.setblocking(False)
+#Create all of the functions needed for the gui to function
 
-#send the username to the server
-my_user = username.encode('utf-8')
-username_header = f"{len(username):<{HEADER_LENGTH}}".encode('utf-8')
-client_socket.send(username_header + my_user)
+# send the message to the server
+def sendMessage(user, message):
+    send = user + ": " + message
+    send = send.encode('utf-8')
+    message_header = f"{len(send):<{HEADER_LENGTH}}".encode('utf-8')
+    client_socket.send(message_header + send)
+
+# used to display the messages you send and the ones you recieve
+def displayMessage(message):
+    msgDisplay.insert(END, message)
+
+#send the message when you click the send button
+def myClick():
+    if(textBox.get() != ''):
+        global USERNAME
+        if USERNAME == "":
+            USERNAME = textBox.get()
+            textBox.delete(0, 'end')
+            sendUser()
+        else:
+            displayMessage(USERNAME + ": " + textBox.get() +"\n")
+            sendMessage(USERNAME, textBox.get() + "\n")
+            textBox.delete(0, 'end')
+
+#Build the GUI
+scroller = Scrollbar(root)
+myButton = Button(root, text="Send message", padx=15, pady = 15, command=myClick, fg="white", bg="blue")
+msgDisplay = Listbox(root, width = 15, height = 15, yscrollcommand=scroller.set)
+textBox = Entry(root, width=50, border=5)
+
+scroller.config(command=msgDisplay.yview)
+myButton.pack(side = BOTTOM)
+scroller.pack(side = LEFT, fill = Y)
+msgDisplay.pack(side=TOP, fill=X)
+textBox.pack(side = BOTTOM)
+
+displayMessage("Please enter your username")
 
 # listen for any messages recieved
 def getMessage():
@@ -67,37 +100,15 @@ def getMessage():
     #keep checking for new messages
     root.after(1000, getMessage)
 
-# send the message to the server
-def sendMessage(user, message):
-    send = user + ": " + message
-    send = send.encode('utf-8')
-    message_header = f"{len(send):<{HEADER_LENGTH}}".encode('utf-8')
-    client_socket.send(message_header + send)
+def sendUser():
 
-# used to display the messages you send and the ones you recieve
-def displayMessage(message):
-    msgDisplay.insert(END, message)
+    #send the username to the server
+    my_user = USERNAME.encode('utf-8')
+    username_header = f"{len(USERNAME):<{HEADER_LENGTH}}".encode('utf-8')
+    client_socket.send(username_header + my_user)
 
-#send the message when you click the send button
-def myClick():
-    if(textBox.get() != ''):
-        displayMessage(username + ": " + textBox.get() +"\n")
-        sendMessage(username, textBox.get() + "\n")
-        textBox.delete(0, 'end')
+    displayMessage( USERNAME + " has entered the chat. Say hello!")
+    sendMessage(USERNAME, "Has entered the chat. Say hello!")
+    getMessage()
 
-#Build the GUI
-scroller = Scrollbar(root)
-myButton = Button(root, text="Send message", padx=15, pady = 15, command=myClick, fg="white", bg="blue")
-msgDisplay = Listbox(root, width = 15, height = 15, yscrollcommand=scroller.set)
-textBox = Entry(root, width=50, border=5)
-
-scroller.config(command=msgDisplay.yview)
-
-myButton.pack(side = BOTTOM)
-scroller.pack(side = LEFT, fill = Y)
-msgDisplay.pack(side=TOP, fill=X)
-textBox.pack(side = BOTTOM)
-displayMessage( username + " has entered the chat. Say hello!")
-sendMessage(username, "Has entered the chat. Say hello!")
-getMessage()
 root.mainloop()
