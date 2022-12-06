@@ -23,9 +23,8 @@ client_socket.setblocking(False)
 #Create all of the functions needed for the gui to function
 
 # send the message to the server
-def sendMessage(user, message):
-    send = user + ": " + message
-    send = send.encode('utf-8')
+def sendMessage(message):
+    send = message.encode('utf-8')
     message_header = f"{len(send):<{HEADER_LENGTH}}".encode('utf-8')
     client_socket.send(message_header + send)
 
@@ -43,7 +42,7 @@ def myClick():
             sendUser()
         else:
             displayMessage(USERNAME + ": " + textBox.get() +"\n")
-            sendMessage(USERNAME, textBox.get() + "\n")
+            sendMessage(textBox.get() + "\n")
             textBox.delete(0, 'end')
 
 #Build the GUI
@@ -71,7 +70,7 @@ def getMessage():
 
             # If we received no data, server gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
             if not len(username_header):
-                print('Connection closed by the server')
+                displayMessage('Connection closed by the server')
                 sys.exit()
 
             # Convert header to int value
@@ -86,7 +85,7 @@ def getMessage():
             message = client_socket.recv(message_length).decode('utf-8')
 
             # Print message
-            displayMessage(message)
+            displayMessage(username + ": " + message)
 
     except IOError as e:
         # This is normal on non blocking connections - when there are no incoming data error is going to be raised
@@ -108,7 +107,7 @@ def sendUser():
     client_socket.send(username_header + my_user)
 
     displayMessage( USERNAME + " has entered the chat. Say hello!")
-    sendMessage(USERNAME, "Has entered the chat. Say hello!")
+    sendMessage("Has entered the chat. Say hello!")
     getMessage()
 
 root.mainloop()
