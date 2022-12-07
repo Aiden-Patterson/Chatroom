@@ -21,7 +21,6 @@ I used Python to run the chatroom. I used Tkinter to create a user interface tha
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
 * [Socket and chatroom tutorial](https://pythonprogramming.net/sockets-tutorial-python-3/)
 * [Tkinter reference](https://www.tutorialspoint.com/python/python_gui_programming.htm)
 * [Python socket reference](https://docs.python.org/3/howto/sockets.html)
