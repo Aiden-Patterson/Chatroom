@@ -8,11 +8,8 @@ I wanted practice in Python, as well as useful practice in getting computers to 
 
 # Network Communication
 
-{Describe the architecture that you used (client/server or peer-to-peer)}
 I used a client/server architecture for this build, so that I could have multiple clients all communicating with each other.
-{Identify if you are using TCP or UDP and what port numbers are used.}
 I used UDP on port 5050. I used this port because I did research and found it as a port that is usually open and not used for many things.
-{Identify the format of messages being sent between the client and server or the messages sent between two peers.}
 I encoded messages with UTF-8 since it is the most commonly used encoding and easiest to use.
 
 # Development Environment
