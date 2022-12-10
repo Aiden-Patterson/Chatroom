@@ -86,10 +86,6 @@ def getMessage():
             displayMessage(username + ": " + message)
 
     except IOError as e:
-        # This is normal on non blocking connections - when there are no incoming data error is going to be raised
-        # Some operating systems will indicate that using AGAIN, and some using WOULDBLOCK error code
-        # We are going to check for both - if one of them - that's expected, means no incoming data, continue as normal
-        # If we got different error code - something happened
         if e.errno != errno.EAGAIN and e.errno != errno.EWOULDBLOCK:
             print('Reading error: {}'.format(str(e)))
             sys.exit()
