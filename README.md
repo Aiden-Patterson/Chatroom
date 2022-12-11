@@ -4,7 +4,7 @@ This is a simple chatroom application made in Python. A server is run, and multi
 
 I wanted practice in Python, as well as useful practice in getting computers to communicate with each other. Right now the clients work only over localhost, but it can be easily changed by changing what IP address the client looks for.
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Demo Video](https://youtu.be/n7FpqSe6Jmc)
 
 # Network Communication
 
